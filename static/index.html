@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>バッテリー管理ダッシュボード</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>🔋 バッテリー管理ダッシュボード</h1>
+    <div id="device-list"></div>
+    <script>
+        fetch('/api/summary')
+            .then(res => res.json())
+            .then(devices => {
+                const list = document.getElementById('device-list');
+                list.innerHTML = "";
+                devices.forEach(d => {
+                    const level = Math.round(d.level * 100);
+                    const charging = d.charging ? "🔌 充電中" : "🔋";
+                    const color = d.level > 0.7 ? "#4caf50" : d.level > 0.3 ? "#ff9800" : "#f44336";
+                    const batteryIcon = `
+                        <svg width="48" height="24" viewBox="0 0 48 24">
+                            <rect x="2" y="4" width="40" height="16" rx="6" fill="#222" stroke="${color}" stroke-width="3"/>
+                            <rect x="4" y="6" width="${Math.max(0, 36 * d.level)}" height="12" rx="4" fill="${color}" />
+                            <rect x="42" y="9" width="4" height="6" rx="2" fill="${color}" />
+                        </svg>
+                    `;
+                    list.innerHTML += `
+                        <div class="device-card" style="border-color:${color}">
+                            <div class="battery-svg">${batteryIcon}</div>
+                            <h2>${d.device_name}</h2>
+                            <p class="level-text" style="color:${color}">${level}% ${charging}</p>
+                            <a href="/device/${encodeURIComponent(d.device_name)}">詳細を見る</a>
+                        </div>
+                    `;
+                });
+            });
+    </script>
+</body>
+</html>

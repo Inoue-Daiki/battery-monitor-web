@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>バッテリー履歴</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1 id="title"></h1>
+    <div class="chart-container">
+        <canvas id="batteryChart" width="600" height="300"></canvas>
+    </div>
+    <script>
+        const deviceName = decodeURIComponent(location.pathname.split('/').pop());
+        document.getElementById('title').textContent = deviceName + " のバッテリー履歴";
+        fetch(`/api/history/${deviceName}`)
+            .then(res => res.json())
+            .then(data => {
+                const ctx = document.getElementById('batteryChart').getContext('2d');
+                const labels = data.map(d => new Date(d.timestamp).toLocaleString());
+                const levels = data.map(d => d.level * 100);
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'バッテリー残量(%)',
+                            data: levels,
+                            borderColor: '#4caf50',
+                            backgroundColor: 'rgba(76,175,80,0.2)',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: { min: 0, max: 100 }
+                        }
+                    }
+                });
+            });
+    </script>
+</body>
+</html>

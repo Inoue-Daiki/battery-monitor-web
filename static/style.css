@@ -1,0 +1,108 @@
+body {
+    font-family: 'San Francisco', 'SF Pro Display', 'Segoe UI', 'Hiragino Sans', Arial, sans-serif;
+    background: linear-gradient(135deg, #e9ecef 0%, #f5f6fa 100%);
+    color: #222;
+    margin: 0;
+    padding: 2rem;
+    min-height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.05em;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #222;
+    text-shadow: 0 1px 0 #fff, 0 2px 8px #dde3ea;
+}
+
+#device-list {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.device-card {
+    background: rgba(255,255,255,0.85); /* カード自体の色は残す */
+    border: none;                       /* 枠線を消す */
+    border-radius: 1.5rem;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    width: 260px;
+    box-shadow: 0 2px 8px 0 rgba(60,60,60,0.06); /* 薄いシャドウは残すとApple風 */
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    backdrop-filter: none;
+}
+
+.device-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 12px 36px 0 rgba(60,60,60,0.16), 0 2px 8px 0 rgba(0,0,0,0.06);
+    border-color: #b6c3d1;
+}
+
+.battery-svg {
+    margin-bottom: 1.2rem;
+}
+
+.level-text {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0.7rem 0 1.2rem 0;
+    letter-spacing: 0.05em;
+    color: #222;
+}
+
+a {
+    color: #007aff;
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1.5px solid transparent;
+    transition: border-bottom 0.2s;
+    border-radius: 0.3em;
+    padding: 0.1em 0.3em;
+    background: rgba(0,122,255,0.06);
+}
+
+a:hover {
+    border-bottom: 1.5px solid #007aff;
+    background: rgba(0,122,255,0.13);
+}
+
+.chart-container {
+    background: rgba(255,255,255,0.85);
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px 0 rgba(60,60,60,0.10), 0 1.5px 6px 0 rgba(0,0,0,0.04);
+    padding: 2rem;
+    margin: 0 auto 2rem auto;
+    max-width: 700px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    border: 1.5px solid #e0e3e8;
+    backdrop-filter: blur(2px);
+}
+
+canvas {
+    background: #f5f6fa;
+    border-radius: 1rem;
+}
+
+@media (max-width: 700px) {
+    #device-list {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+    }
+    .device-card {
+        width: 90vw;
+        min-width: 220px;
+    }
+    .chart-container {
+        padding: 1rem;
+    }
+}
