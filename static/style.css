@@ -92,6 +92,32 @@ canvas {
     border-radius: 1rem;
 }
 
+.drain-analysis {
+    margin-top: 2rem;
+}
+
+.stats-card, .period-card {
+    background: rgba(255,255,255,0.85);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: 0 2px 8px 0 rgba(60,60,60,0.06);
+}
+
+.stats-card h3, .period-card h4 {
+    margin-top: 0;
+    color: #222;
+}
+
+.error {
+    color: #f44336;
+    font-weight: bold;
+}
+
+.period-card {
+    border-left: 4px solid #007aff;
+}
+
 @media (max-width: 700px) {
     #device-list {
         flex-direction: column;

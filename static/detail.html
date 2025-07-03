@@ -11,9 +11,19 @@
     <div class="chart-container">
         <canvas id="batteryChart" width="600" height="300"></canvas>
     </div>
+    
+    <!-- スリープドレイン分析 -->
+    <div class="drain-analysis">
+        <h2>スリープ時ドレイン分析</h2>
+        <div id="drainStats"></div>
+        <div id="drainPeriods"></div>
+    </div>
+
     <script>
         const deviceName = decodeURIComponent(location.pathname.split('/').pop());
         document.getElementById('title').textContent = deviceName + " のバッテリー履歴";
+        
+        // 履歴チャート
         fetch(`/api/history/${deviceName}`)
             .then(res => res.json())
             .then(data => {
@@ -39,6 +49,43 @@
                         }
                     }
                 });
+            });
+
+        // スリープドレイン分析
+        fetch(`/api/sleep-drain/${deviceName}`)
+            .then(res => res.json())
+            .then(data => {
+                const statsDiv = document.getElementById('drainStats');
+                const periodsDiv = document.getElementById('drainPeriods');
+                
+                if (data.error) {
+                    statsDiv.innerHTML = `<p class="error">${data.error}</p>`;
+                    return;
+                }
+                
+                // 統計情報
+                const stats = data.statistics;
+                statsDiv.innerHTML = `
+                    <div class="stats-card">
+                        <h3>ドレイン統計</h3>
+                        <p>平均ドレイン: <strong>${stats.average_drain_per_hour}%/時</strong></p>
+                        <p>最大ドレイン: <strong>${stats.max_drain_per_hour}%/時</strong></p>
+                        <p>最小ドレイン: <strong>${stats.min_drain_per_hour}%/時</strong></p>
+                        <p>検出期間数: <strong>${stats.total_periods}回</strong></p>
+                    </div>
+                `;
+                
+                // 個別期間
+                const periodsHtml = data.sleep_periods.map(period => `
+                    <div class="period-card">
+                        <h4>${new Date(period.start_time).toLocaleString()} - ${new Date(period.end_time).toLocaleString()}</h4>
+                        <p>継続時間: ${period.duration_hours}時間</p>
+                        <p>バッテリー: ${period.start_level}% → ${period.end_level}% (${period.drain_percent}%減)</p>
+                        <p>ドレイン率: <strong>${period.drain_rate_per_hour}%/時</strong></p>
+                    </div>
+                `).join('');
+                
+                periodsDiv.innerHTML = `<h3>スリープ期間詳細</h3>${periodsHtml}`;
             });
     </script>
 </body>

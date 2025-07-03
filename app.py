@@ -137,6 +137,33 @@ def create_app():
         """
         return app.send_static_file("detail.html")
 
+    @app.route("/api/sleep-drain/<device_name>")
+    def api_sleep_drain(device_name):
+        """
+        スリープ時のバッテリードレイン分析
+        ---
+        parameters:
+          - name: device_name
+            in: path
+            type: string
+            required: true
+          - name: hours
+            in: query
+            type: integer
+            description: 分析する時間範囲（デフォルト8時間）
+        responses:
+          200:
+            description: ドレイン分析結果
+        """
+        try:
+            hours = int(request.args.get('hours', 8))
+            result = battery_service.get_sleep_drain_analysis(device_name, hours)
+            logger.info(f"Sleep drain analysis for {device_name}, {hours}h period")
+            return jsonify(result)
+        except Exception as e:
+            logger.error(f"Error in api_sleep_drain: {e}")
+            return jsonify({"error": "Internal server error"}), 500
+
     return app
 
 if __name__ == "__main__":
