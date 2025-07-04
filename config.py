@@ -11,3 +11,12 @@ class Config:
     HOST = os.environ.get('HOST') or '0.0.0.0'
     PORT = int(os.environ.get('PORT') or 5001)
     DEBUG = os.environ.get('FLASK_ENV') == 'development'
+    TESTING = os.environ.get('TESTING') == 'true'
+
+class TestConfig(Config):
+    """テスト用設定"""
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    SECRET_KEY = 'test-secret-key'
+    LOG_LEVEL = 'ERROR'
+    WTF_CSRF_ENABLED = False
