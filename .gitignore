@@ -103,9 +103,10 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# Test results
+pytest-results.xml
+test-results/
 
-# Config files with secrets
-config_local.py
-secrets.json
+# Code quality
+.flake8
+.mypy_cache/

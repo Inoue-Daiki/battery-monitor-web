@@ -27,7 +27,7 @@ jobs:
       run: python -c "import sys; print(sys.version)"
     
     - name: Cache pip dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt') }}
@@ -45,7 +45,6 @@ jobs:
       run: |
         mkdir -p logs
         mkdir -p static
-        mkdir -p .github/workflows
     
     - name: Lint with flake8
       run: |
@@ -60,18 +59,30 @@ jobs:
       run: |
         pytest --cov=. --cov-report=xml --cov-report=term-missing --cov-report=html -v
     
-    - name: Upload coverage reports
-      uses: codecov/codecov-action@v3
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
       with:
         file: ./coverage.xml
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
         verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}
     
     - name: Upload coverage artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: coverage-report-${{ matrix.python-version }}
         path: htmlcov/
+        retention-days: 30
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: test-results-${{ matrix.python-version }}
+        path: |
+          pytest-results.xml
+          logs/
+        retention-days: 7
